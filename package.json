@@ -2,5 +2,13 @@
   "name": "scandium",
   "version": "0.0.0",
   "license": "MIT",
-  "repository": "LinusU/scandium"
+  "repository": "LinusU/scandium",
+  "bin": "app.js",
+  "dependencies": {
+    "aws-sdk": "^2.97.0",
+    "cp-file": "^4.2.0",
+    "execa": "^0.8.0",
+    "neodoc": "^1.4.0",
+    "rm-file": "^1.0.0"
+  }
 }
