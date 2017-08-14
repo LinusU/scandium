@@ -27,7 +27,7 @@ class LambdaSocket extends stream.Duplex {
     this.remotePort = 80
   }
 
-  address() {
+  address () {
     return { port: this.localPort, family: 'IPv4', address: this.localAddress }
   }
 
@@ -106,7 +106,7 @@ class LambdaResponse extends http.ServerResponse {
     )
 
     this[kCallback](null, {
-      isBase64Encoded: probablyText ? false : true,
+      isBase64Encoded: !probablyText,
       statusCode: this.statusCode,
       headers: this._headers,
       body: Buffer.concat(this[kChunks]).toString(probablyText ? 'utf8' : 'base64')
