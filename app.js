@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 
-const path = require('path')
-
 const Lambda = require('aws-sdk/clients/lambda')
 const APIGateway = require('aws-sdk/clients/apigateway')
-const cpFile = require('cp-file')
-const execa = require('execa')
 const neodoc = require('neodoc')
-const rmFile = require('rm-file')
 const parseArn = require('aws-arn-parser')
 const shortid = require('shortid')
 
+const builder = require('./lib/builder')
 const swagger = require('./lib/swagger')
 
 const lambda = new Lambda({ apiVersion: '2015-03-31' })
@@ -35,19 +31,6 @@ const defaultParams = {
   MemorySize: 320,
   Timeout: 3,
   Runtime: 'nodejs6.10'
-}
-
-async function createZipFile (directory) {
-  await cpFile(path.join(__dirname, 'dockerfile.txt'), path.join(directory, 'scandium-dockerfile'))
-  await cpFile(path.join(__dirname, 'entrypoint.js'), path.join(directory, 'scandium-entrypoint.js'))
-
-  const imageId = await execa.stdout('docker', ['build', '--quiet', '--file', 'scandium-dockerfile', '.'], { cwd: directory })
-  const zipFile = await execa.stdout('docker', ['run', '--rm', imageId], { cwd: directory })
-
-  await rmFile(path.join(directory, 'scandium-dockerfile'))
-  await rmFile(path.join(directory, 'scandium-entrypoint.js'))
-
-  return Buffer.from(zipFile, 'base64')
 }
 
 function createFunction ({ zipFile, functionName, role }) {
@@ -130,7 +113,7 @@ async function main () {
   const args = neodoc.run(usage)
 
   if (args.create) {
-    const zipFile = await createZipFile(process.cwd())
+    const zipFile = await builder.createZipFile(process.cwd())
     const result = await createFunction({ zipFile, functionName: args['<name>'], role: args['--role'] })
 
     const lambdaArn = result.FunctionArn
@@ -156,7 +139,7 @@ async function main () {
   }
 
   if (args.update) {
-    const zipFile = await createZipFile(process.cwd())
+    const zipFile = await builder.createZipFile(process.cwd())
     const result = await updateFunction({ zipFile, functionName: args['<name>'] })
 
     const lambdaArn = result.FunctionArn
