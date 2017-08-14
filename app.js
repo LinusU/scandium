@@ -2,24 +2,33 @@
 
 const path = require('path')
 
-const aws = require('aws-sdk')
+const Lambda = require('aws-sdk/clients/lambda')
+const APIGateway = require('aws-sdk/clients/apigateway')
 const cpFile = require('cp-file')
 const execa = require('execa')
 const neodoc = require('neodoc')
 const rmFile = require('rm-file')
+const parseArn = require('aws-arn-parser')
+const shortid = require('shortid')
 
-const lambda = new aws.Lambda({ apiVersion: '2015-03-31' })
+const swagger = require('./lib/swagger')
+
+const lambda = new Lambda({ apiVersion: '2015-03-31' })
+const apiGateway = new APIGateway({ apiVersion: '2015-07-09' })
 
 const usage = `
 Scandium
 
 Usage:
-  scandium create <name> --role=<role>
-  scandium update <name>
+  scandium create <name> [--swagger=<swagger>] [--deploy] --role=<role>
+  scandium update <name> [--swagger=<swagger>] [--deploy] --rest-api-id=<rest-api-id>
 
 Options:
-  <name>    Name of the Lambda function.
-  --role    ARN of the IAM role that Lambda assumes when it executes your function.
+  <name>          Name of the Lambda function.
+  --role          ARN of the IAM role that Lambda assumes when it executes your function.
+  --swagger       Path to Swagger API definition used to configure AWS API Gateway.
+  --rest-api-id   ID of the AWS API Gateway rest api to update (printed by the "create" command).
+  --deploy        Deploy the API and make it callable from the Internet.
 `
 
 const defaultParams = {
@@ -66,6 +75,57 @@ function updateFunction ({ zipFile, functionName }) {
   return lambda.updateFunctionCode(params).promise()
 }
 
+function addPermission ({ lambdaArn, restApiId }) {
+  const { region, namespace } = parseArn(lambdaArn)
+
+  const params = {
+    Action: 'lambda:InvokeFunction',
+    FunctionName: lambdaArn,
+    Principal: 'apigateway.amazonaws.com',
+    StatementId: `${shortid.generate()}-AllowExecutionFromAPIGateway`,
+    SourceArn: `arn:aws:execute-api:${region}:${namespace}:${restApiId}/*/*/*`
+  }
+
+  return lambda.addPermission(params).promise()
+}
+
+async function createApiGateway ({ definition, lambdaArn }) {
+  const params = {
+    body: JSON.stringify(definition),
+    failOnWarnings: true
+  }
+
+  const result = await apiGateway.importRestApi(params).promise()
+
+  await addPermission({ lambdaArn, restApiId: result.id })
+
+  return result
+}
+
+async function updateApiGateway ({ id, definition, lambdaArn }) {
+  const params = {
+    body: JSON.stringify(definition),
+    restApiId: id,
+    failOnWarnings: true,
+    mode: 'overwrite'
+  }
+
+  const result = await apiGateway.putRestApi(params).promise()
+
+  await addPermission({ lambdaArn, restApiId: result.id })
+
+  return result
+}
+
+function deployApiGateway ({ id, stage }) {
+  const params = {
+    restApiId: id,
+    stageName: stage
+  }
+
+  return apiGateway.createDeployment(params).promise()
+}
+
 async function main () {
   const args = neodoc.run(usage)
 
@@ -73,14 +133,54 @@ async function main () {
     const zipFile = await createZipFile(process.cwd())
     const result = await createFunction({ zipFile, functionName: args['<name>'], role: args['--role'] })
 
-    console.log(`Created new Lambda function with ARN: ${result.FunctionArn}`)
+    const lambdaArn = result.FunctionArn
+
+    console.log(`Created new Lambda function with ARN: ${lambdaArn}`)
+
+    const definition = args['--swagger']
+      ? await swagger.loadSwaggerFile(args['--swagger'], lambdaArn)
+      : await swagger.forwardAllDefinition(lambdaArn)
+
+    const { id } = await createApiGateway({ definition, lambdaArn })
+
+    console.log(`Created new API Gateway with id: ${id}`)
+
+    if (args['--deploy']) {
+      const stage = 'prod'
+      const { region } = parseArn(lambdaArn)
+
+      await deployApiGateway({ id, stage })
+
+      console.log(`Now serving live requests at: https://${id}.execute-api.${region}.amazonaws.com/${stage}`)
+    }
   }
 
   if (args.update) {
     const zipFile = await createZipFile(process.cwd())
     const result = await updateFunction({ zipFile, functionName: args['<name>'] })
 
-    console.log(`Updated existing Lambda function with ARN: ${result.FunctionArn}`)
+    const lambdaArn = result.FunctionArn
+
+    console.log(`Updated existing Lambda function with ARN: ${lambdaArn}`)
+
+    const definition = args['--swagger']
+      ? await swagger.loadSwaggerFile(args['--swagger'], lambdaArn)
+      : await swagger.forwardAllDefinition(lambdaArn)
+
+    const id = args['--rest-api-id']
+
+    await updateApiGateway({ id, definition, lambdaArn })
+
+    console.log(`Updated existing API Gateway with id: ${id}`)
+
+    if (args['--deploy']) {
+      const stage = 'prod'
+      const { region } = parseArn(lambdaArn)
+
+      await deployApiGateway({ id, stage })
+
+      console.log(`Now serving live requests at: https://${id}.execute-api.${region}.amazonaws.com/${stage}`)
+    }
   }
 }
 

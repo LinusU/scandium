@@ -5,10 +5,14 @@
   "repository": "LinusU/scandium",
   "bin": "app.js",
   "dependencies": {
+    "aws-arn-parser": "^1.0.0",
     "aws-sdk": "^2.97.0",
     "cp-file": "^4.2.0",
     "execa": "^0.8.0",
+    "load-json-file": "^2.0.0",
+    "load-yaml-file": "^0.1.0",
     "neodoc": "^1.4.0",
-    "rm-file": "^1.0.0"
+    "rm-file": "^1.0.0",
+    "shortid": "^2.2.8"
   }
 }

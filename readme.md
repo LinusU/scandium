@@ -14,18 +14,26 @@ npm install --global scandium
 
 ## Usage
 
-To create a new Lambda function, use the `scandium create` command. This will package your application and upload it to AWS Lambda.
+To create a new Lambda function, use the `scandium create` command. This will package your application and upload it to AWS Lambda, as well as configure an API Gateway in front of your function.
 
 ```sh
-scandium create my-awesome-api --role=arn:aws:iam::123:role/service-role/my-awesome-role
+scandium create my-awesome-api --deploy --role=arn:aws:iam::123:role/service-role/my-awesome-role
 ```
 
 *note: Currently you have to specify a role, in the future one could be automatically created*
 
-Whenever you make changes to your app, you can upload a new version of it by using the `scandium update` command. This will package your application again, and upload it as a new version to the specified Lambda function.
+You should now be presented with a url where you can access your api.
+
+> Now serving live requests at: https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/prod
+
+Whenever you make changes to your app, you can upload a new version of it by using the `scandium update` command. This will package your application again, and upload it as a new version to the specified Lambda function. It will also update the configuration of the API Gateway to point at the new function.
 
 ```sh
-scandium update my-awesome-api
+scandium update my-awesome-api --deploy --rest-api-id=xxxxxxxxxx
 ```
 
-At this time, Scandium doesn't help you with setting up AWS API Gateway in front of the Lambda function. The easiset way to get started is to create a proxy resource at `/` that simply forwards all call to the function; but you could also model your entire api in AWS API Gateway and get all the benefits of that. Just let every method invoke the same Lambda function, it will automatically route depending on the incomming path.
+*note: Currently you need to specify the rest api id that was printed by the `create` command*
+
+## API Gateway
+
+By default, Scandium will set up an API Gateway that simply forwards all requests to the Lambda function. If you want to utilise the benefits of API Gateway fully, you can provide a Swagger file describing your API endpoints. Pass the `--swagger=my-api-definition.yml` to either the `create` or `update` command and Scandium will configure the API Gateway for you.
