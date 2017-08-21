@@ -37,3 +37,7 @@ scandium update my-awesome-api --deploy --rest-api-id=xxxxxxxxxx
 ## API Gateway
 
 By default, Scandium will set up an API Gateway that simply forwards all requests to the Lambda function. If you want to utilise the benefits of API Gateway fully, you can provide a Swagger file describing your API endpoints. Pass the `--swagger=my-api-definition.yml` to either the `create` or `update` command and Scandium will configure the API Gateway for you.
+
+## `prepare`-scripts
+
+Scandium has support for `prepare` scripts, if the script is present in the `package.json` it will make sure that the script is being run with full `devDependencies` installed. The final package being uploaded to Lambda will still only contain the production `dependencies`.

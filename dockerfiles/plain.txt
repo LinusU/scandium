@@ -1,0 +1,25 @@
+FROM amazonlinux:2017.03
+
+RUN yum install -y gcc gcc-c++ make openssl-devel zip
+RUN curl https://nodejs.org/download/release/v6.10.3/node-v6.10.3-linux-x64.tar.gz | tar xz -C /usr --strip-components=1
+
+WORKDIR /builder
+
+# Copy stripped package files
+COPY scandium-clean-package.json package.json
+COPY scandium-clean-package-lock.json package-lock.json
+
+# Add production dependencies
+RUN npm install --production
+RUN zip -9qyr /output.zip node_modules
+
+# Add the app files
+COPY . .
+RUN rm scandium-clean-package.json scandium-clean-package-lock.json scandium-dockerfile
+
+# Add the local code to the zip
+RUN rm -r node_modules
+RUN zip -9qyrg /output.zip .
+
+# Give the zip to the caller
+CMD cat /output.zip | base64
