@@ -131,6 +131,12 @@ const serverPromise = new Promise((resolve) => {
 })
 
 exports.handler = function (event, context, cb) {
+  // Lambda will try and wait for the event loop to exhaust. In a web server
+  // that typically won't happen because of connection pools to the database,
+  // open connections to external services, etc. Tell Lambda to complete the
+  // function anyways.
+  context.callbackWaitsForEmptyEventLoop = false
+
   const socket = new LambdaSocket(event)
   const request = new LambdaRequest(socket, event)
   const response = new LambdaResponse(socket, request, cb)
