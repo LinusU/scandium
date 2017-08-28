@@ -66,6 +66,10 @@ class LambdaRequest extends http.IncomingMessage {
     const body = event.body ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8') : ''
 
     if (body) {
+      if (!('content-length' in this.headers)) {
+        this.headers['content-length'] = String(body.byteLength)
+      }
+
       this.push(body)
     }
 
