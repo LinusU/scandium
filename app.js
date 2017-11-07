@@ -13,15 +13,15 @@ const usage = `
 Scandium
 
 Usage:
-  scandium create <name> [--swagger=<swagger>] [--deploy] --role=<role>
-  scandium update <name> [--swagger=<swagger>] [--deploy] --rest-api-id=<rest-api-id>
+  scandium create <name> [--swagger=<swagger>] [--deploy-to=<stage>] --role=<role>
+  scandium update <name> [--swagger=<swagger>] [--deploy-to=<stage>] --rest-api-id=<rest-api-id>
 
 Options:
   <name>          Name of the Lambda function.
   --role          ARN of the IAM role that Lambda assumes when it executes your function.
   --swagger       Path to Swagger API definition used to configure AWS API Gateway.
   --rest-api-id   ID of the AWS API Gateway rest api to update (printed by the "create" command).
-  --deploy        Deploy the API and make it callable from the Internet.
+  --deploy-to     Deploy the API to the specified stage, and make it callable from the Internet.
 `
 
 async function main () {
@@ -46,8 +46,8 @@ async function main () {
       const { id } = await amazon.createApiGateway({ definition, lambdaArn })
       spinner.succeed(`Created new API Gateway with id: ${id}`)
 
-      if (args['--deploy']) {
-        const stage = 'prod'
+      if (args['--deploy-to']) {
+        const stage = args['--deploy-to']
         const { region } = parseArn(lambdaArn)
 
         spinner.start('Deploying the API to a live address')
@@ -75,8 +75,8 @@ async function main () {
       await amazon.updateApiGateway({ id, definition, lambdaArn })
       spinner.succeed(`Updated existing API Gateway with id: ${id}`)
 
-      if (args['--deploy']) {
-        const stage = 'prod'
+      if (args['--deploy-to']) {
+        const stage = args['--deploy-to']
         const { region } = parseArn(lambdaArn)
 
         spinner.start('Deploying the API to a live address')
