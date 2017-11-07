@@ -6,6 +6,25 @@ const stream = require('stream')
 const kChunks = Symbol('chunks')
 const kCallback = Symbol('callback')
 
+function shouldBase64Encode (headers) {
+  /* Every other content-encoding than "identity" is higlhy likely to be binary */
+  if ((headers['content-encoding'] || 'identity') !== 'identity') {
+    return true
+  }
+
+  /* Common text based formats doesn't need to be encoded */
+  if (
+    /^text\//.exec(headers['content-type']) ||
+    /^application\/(dart|(java|ecma|post)script)/.exec(headers['content-type']) ||
+    /^application\/(.+\+)?(json|xml)/.exec(headers['content-type'])
+  ) {
+    return false
+  }
+
+  /* Fallback to do the encoding */
+  return true
+}
+
 class LambdaSocket extends stream.Duplex {
   constructor (event) {
     super()
@@ -105,17 +124,13 @@ class LambdaResponse extends http.ServerResponse {
   end (chunk) {
     if (chunk) this.write(chunk)
 
-    const probablyText = Boolean(
-      /^text\//.exec(this._headers['content-type']) ||
-      /^application\/(dart|(java|ecma|post)script)/.exec(this._headers['content-type']) ||
-      /^application\/(.+\+)?(json|xml)/.exec(this._headers['content-type'])
-    )
+    const base64Encode = shouldBase64Encode(this._headers)
 
     this[kCallback](null, {
-      isBase64Encoded: !probablyText,
+      isBase64Encoded: base64Encode,
       statusCode: this.statusCode,
       headers: this._headers,
-      body: Buffer.concat(this[kChunks]).toString(probablyText ? 'utf8' : 'base64')
+      body: Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
     })
   }
 }
