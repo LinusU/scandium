@@ -20,7 +20,7 @@ To create a new Lambda function, use the `scandium create` command. This will pa
 scandium create my-awesome-api --deploy --role=arn:aws:iam::123:role/service-role/my-awesome-role
 ```
 
-*note: Currently you have to specify a role, in the future one could be automatically created*
+*note: Currently you have to specify a role manually, read [how to create one](docs/role.md)*
 
 You should now be presented with a url where you can access your api.
 
