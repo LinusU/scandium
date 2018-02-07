@@ -32,6 +32,10 @@ scandium update my-awesome-api --deploy-to=prod --rest-api-id=xxxxxxxxxx
 
 *note: Currently you need to specify the rest api id that was printed by the `create` command*
 
+## Tutorials
+
+- [Deploying a Next.js app to AWS Lambda](https://medium.com/@LinusU/deploying-a-next-js-app-to-aws-lambda-4dcdd233f876)
+
 ## API Gateway
 
 By default, Scandium will set up an API Gateway that simply forwards all requests to the Lambda function. If you want to utilise the benefits of API Gateway fully, you can provide a Swagger file describing your API endpoints. Pass the `--swagger=my-api-definition.yml` to either the `create` or `update` command and Scandium will configure the API Gateway for you.
