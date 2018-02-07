@@ -13,7 +13,7 @@ const usage = `
 Scandium
 
 Usage:
-  scandium create <name> [--swagger=<swagger>] [--deploy-to=<stage>] --role=<role>
+  scandium create <name> [--swagger=<swagger>] [--deploy-to=<stage>] [--role=<role>]
   scandium update <name> [--swagger=<swagger>] [--deploy-to=<stage>] --rest-api-id=<rest-api-id>
 
 Options:
@@ -34,8 +34,15 @@ async function main () {
       const zipFile = await builder.createZipFile(process.cwd())
       spinner.succeed(`App packaged successfully! Final size: ${prettyBytes(zipFile.byteLength)}`)
 
+      let roleArn = args['--role']
+      if (!roleArn) {
+        spinner.start('Creating Lambda role')
+        roleArn = await amazon.createLambdaRole(args['<name>'])
+        spinner.succeed(`Created new Lambda role with ARN: ${roleArn}`)
+      }
+
       spinner.start('Creating Lambda function')
-      const lambdaArn = await amazon.createFunction({ zipFile, functionName: args['<name>'], role: args['--role'] })
+      const lambdaArn = await amazon.createFunction({ zipFile, functionName: args['<name>'], role: roleArn })
       spinner.succeed(`Created new Lambda function with ARN: ${lambdaArn}`)
 
       const definition = args['--swagger']
