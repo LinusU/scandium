@@ -6,6 +6,7 @@
   "bin": "app.js",
   "dependencies": {
     "aws-arn-parser": "^1.0.0",
+    "aws-has-region": "^1.0.0",
     "aws-sdk": "^2.97.0",
     "cp-file": "^4.2.0",
     "execa": "^0.8.0",

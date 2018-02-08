@@ -7,10 +7,13 @@ const ora = require('ora')
 const neodoc = require('neodoc')
 const parseArn = require('aws-arn-parser')
 const prettyBytes = require('pretty-bytes')
+const awsHasRegion = require('aws-has-region')
 
 const amazon = require('./lib/amazon')
 const builder = require('./lib/builder')
 const swagger = require('./lib/swagger')
+
+class UserError extends Error {}
 
 const usage = `
 Scandium
@@ -30,6 +33,10 @@ Options:
 async function main () {
   const args = neodoc.run(usage)
   const spinner = ora()
+
+  if (!awsHasRegion()) {
+    throw new UserError(awsHasRegion.errorText)
+  }
 
   try {
     if (args.create) {
@@ -103,5 +110,5 @@ async function main () {
 
 main().catch((err) => {
   process.exitCode = 1
-  console.error(err.stack)
+  console.error((err instanceof UserError) ? err.message : err.stack)
 })
