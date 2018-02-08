@@ -31,6 +31,8 @@ async function main () {
   const args = neodoc.run(usage)
   const spinner = ora()
 
+  amazon.verifyConfig()
+
   try {
     if (args.create) {
       spinner.start('Packaging app for Lambda')
