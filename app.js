@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+/* Make sure that AWS uses local config files, since this is a CLI util */
+process.env.AWS_SDK_LOAD_CONFIG = 'true'
+
 const ora = require('ora')
 const neodoc = require('neodoc')
 const parseArn = require('aws-arn-parser')
