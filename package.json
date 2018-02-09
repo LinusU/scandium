@@ -12,7 +12,6 @@
     "execa": "^0.8.0",
     "is-ci": "^1.1.0",
     "listr": "^0.13.0",
-    "listr-update-renderer": "^0.4.0",
     "listr-verbose-renderer": "^0.4.1",
     "load-json-file": "^2.0.0",
     "load-yaml-file": "^0.1.0",
