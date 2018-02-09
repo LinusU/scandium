@@ -17,19 +17,17 @@ const usage = `
 Scandium
 
 usage:
-  scandium [global options] create <name> [--swagger=<swagger>] [--deploy-to=<stage>] [--role=<role>]
-  scandium [global options] update <name> [--swagger=<swagger>] [--deploy-to=<stage>] --rest-api-id=<rest-api-id>
+  scandium [options] create <name> [--swagger=<swagger>] [--deploy-to=<stage>] [--role=<role>]
+  scandium [options] update <name> [--swagger=<swagger>] [--deploy-to=<stage>] --rest-api-id=<rest-api-id>
 
 options:
-  <name>          Name of the Lambda function.
-  --role          ARN of the IAM role that Lambda assumes when it executes your function.
-  --swagger       Path to Swagger API definition used to configure AWS API Gateway.
-  --rest-api-id   ID of the AWS API Gateway rest api to update (printed by the "create" command).
-  --deploy-to     Deploy the API to the specified stage, and make it callable from the Internet.
-
-global options:
-  --help          Show this help, then exit.
-  --verbose       Print verbose output.
+  <name>                       Name of the Lambda function.
+  --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
+  --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
+  --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to update (printed by the "create" command).
+  --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
+  --help                       Show this help, then exit.
+  --verbose                    Print verbose output.
 `
 
 async function main () {
