@@ -10,34 +10,29 @@ const listrVerboseRenderer = require('listr-verbose-renderer')
 const neodoc = require('neodoc')
 
 const tasks = require('./lib/tasks')
-
-class UserError extends Error {}
+const UserError = require('./lib/user-error')
 
 const usage = `
 Scandium
 
 usage:
-  scandium [options] create <name> [--swagger=<swagger>] [--deploy-to=<stage>] [--role=<role>]
-  scandium [options] update <name> [--swagger=<swagger>] [--deploy-to=<stage>] --rest-api-id=<rest-api-id>
+  scandium create [options] <name>
+  scandium update [options] <name>
 
 options:
   <name>                       Name of the Lambda function.
-  --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
-  --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
-  --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to update (printed by the "create" command).
   --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
   --help                       Show this help, then exit.
+  --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
+  --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
+  --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
+  --version                    Print the current version of Scandium, then exit.
 `
 
 async function main () {
   const args = neodoc.run(usage, { laxPlacement: true })
-
-  const listrOpts = {}
-
-  if (isCI || args['--verbose']) {
-    listrOpts.renderer = listrVerboseRenderer
-  }
+  const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
     tasks.packageApp,
@@ -73,5 +68,5 @@ async function main () {
 
 main().catch((err) => {
   process.exitCode = 1
-  console.error((err instanceof UserError) ? err.message : err.stack)
+  console.error((err instanceof UserError) ? `\n\u001b[1m\u001b[31m${err.message}\u001b[39m\u001b[22m` : err.stack)
 })
