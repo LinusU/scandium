@@ -6,6 +6,7 @@ process.env.AWS_SDK_LOAD_CONFIG = 'true'
 const neodoc = require('neodoc')
 const awsHasRegion = require('aws-has-region')
 const Listr = require('listr')
+const isCI = require('is-ci')
 
 const tasks = require('./lib/tasks')
 
@@ -24,7 +25,14 @@ Options:
   --swagger       Path to Swagger API definition used to configure AWS API Gateway.
   --rest-api-id   ID of the AWS API Gateway rest api to update (printed by the "create" command).
   --deploy-to     Deploy the API to the specified stage, and make it callable from the Internet.
+  --verbose       Use verbose output renderer.
 `
+
+const args = neodoc.run(usage)
+
+const listrOpts = {
+  renderer: isCI || args['--verbose'] ? require('listr-verbose-renderer') : require('listr-update-renderer') 
+}
 
 const createList = new Listr([
   tasks.packageApp,
@@ -34,7 +42,7 @@ const createList = new Listr([
   tasks.generateSwaggerDefinition,
   tasks.createApiGateway,
   tasks.deployApi
-])
+], listrOpts)
 
 const updateList = new Listr([
   tasks.packageApp,
@@ -43,11 +51,9 @@ const updateList = new Listr([
   tasks.generateSwaggerDefinition,
   tasks.updateApiGateway,
   tasks.deployApi
-])
+], listrOpts)
 
 async function main () {
-  const args = neodoc.run(usage)
-
   if (!awsHasRegion()) {
     throw new UserError(awsHasRegion.errorText)
   }
