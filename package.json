@@ -1,6 +1,6 @@
 {
   "name": "scandium",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "license": "MIT",
   "repository": "LinusU/scandium",
   "bin": "app.js",
