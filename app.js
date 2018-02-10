@@ -28,7 +28,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
-  --env=<KEY=value>                  Include an env var (e.g.: \`-env KEY=value\`). Can appear many times.
+  --env=<KEY=value>            Include an env var (e.g.: \`-env KEY=value\`). Can appear many times.
 `
 
 async function main () {
