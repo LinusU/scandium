@@ -28,6 +28,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
+  --docker-cache=<path>        Export docker cache to <path>, useful for CI.
 `
 
 async function main () {
