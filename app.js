@@ -11,6 +11,7 @@ const neodoc = require('neodoc')
 
 const tasks = require('./lib/tasks')
 const UserError = require('./lib/user-error')
+const parseEnv = require('./lib/parse-env')
 
 const usage = `
 Scandium
@@ -59,12 +60,15 @@ async function main () {
     throw new UserError(awsHasRegion.errorText)
   }
 
+  const defaultEnv = { NODE_ENV: 'production' }
+  const env = Object.assign({}, defaultEnv, parseEnv(args['--env']))
+
   if (args.create) {
-    await createList.run({ args })
+    await createList.run({ args, env })
   }
 
   if (args.update) {
-    await updateList.run({ args })
+    await updateList.run({ args, env })
   }
 }
 
