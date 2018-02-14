@@ -22,7 +22,7 @@ usage:
 
 options:
   --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
-  --env=<key=value>...         Set environmental variables. Example: "--env NODE_ENV=production".
+  --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
