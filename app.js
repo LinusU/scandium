@@ -9,7 +9,6 @@ const Listr = require('listr')
 const listrVerboseRenderer = require('listr-verbose-renderer')
 const neodoc = require('neodoc')
 
-const amazon = require('./lib/amazon')
 const tasks = require('./lib/tasks')
 const UserError = require('./lib/user-error')
 
@@ -23,6 +22,7 @@ usage:
 
 options:
   --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
+  --env=<key=value>...         Set environmental variables. Example: "--env NODE_ENV=production".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
@@ -33,14 +33,25 @@ options:
   --version                    Print the current version of Scandium, then exit.
 `
 
+function patchEnvFromFileArg (args) {
+  const envFromFileIndex = args.indexOf('--env-from-file', 2)
+
+  if (envFromFileIndex > 0 && envFromFileIndex < args.length - 1) {
+    args.splice(envFromFileIndex, 1)
+    args[envFromFileIndex] = '--env-from-file=' + args[envFromFileIndex]
+  }
+}
+
 async function main () {
+  // FIXME: https://github.com/felixSchl/neodoc/issues/94
+  patchEnvFromFileArg(process.argv)
+
   const args = neodoc.run(usage, { laxPlacement: true })
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
-    tasks.readEnvironmentFile,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
@@ -52,7 +63,6 @@ async function main () {
   const updateList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
-    tasks.readEnvironmentFile,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
     tasks.loadSwaggerDefinition,

@@ -5,6 +5,7 @@
   "repository": "LinusU/scandium",
   "bin": "app.js",
   "dependencies": {
+    "amend-object": "^1.0.0",
     "aws-arn-parser": "^1.0.0",
     "aws-has-region": "^1.0.0",
     "aws-sdk": "^2.97.0",
@@ -17,6 +18,7 @@
     "load-json-file": "^2.0.0",
     "load-yaml-file": "^0.1.0",
     "neodoc": "^1.4.0",
+    "parse-key-value-pair": "^1.0.0",
     "path-exists": "^3.0.0",
     "pretty-bytes": "^4.0.2",
     "rm-file": "^1.0.0",
