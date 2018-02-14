@@ -9,6 +9,7 @@ const Listr = require('listr')
 const listrVerboseRenderer = require('listr-verbose-renderer')
 const neodoc = require('neodoc')
 
+const amazon = require('./lib/amazon')
 const tasks = require('./lib/tasks')
 const UserError = require('./lib/user-error')
 
@@ -18,6 +19,7 @@ Scandium
 usage:
   scandium create [options] <name>
   scandium update [options] <name>
+  scandium environment show [options] <name>
 
 options:
   <name>                       Name of the Lambda function.
@@ -63,6 +65,14 @@ async function main () {
 
   if (args.update) {
     await updateList.run({ args })
+  }
+
+  if (args.environment && args.show) {
+    const environment = await amazon.getFunctionEnvironment({ functionName: args['<name>'] })
+
+    for (const key of Object.keys(environment)) {
+      console.log(`${key}=${environment[key]}`)
+    }
   }
 }
 
