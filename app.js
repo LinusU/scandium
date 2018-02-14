@@ -17,15 +17,15 @@ const usage = `
 Scandium
 
 usage:
-  scandium create [options] <name>
-  scandium update [options] <name>
-  scandium environment show [options] <name>
+  scandium create [options]
+  scandium update [options]
+  scandium environment show [options]
 
 options:
-  <name>                       Name of the Lambda function.
-  --env-from-file=<path>       Read and set environmental variables from the specified file.
   --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
+  --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
+  --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
   --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
@@ -38,6 +38,7 @@ async function main () {
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
+    tasks.parseOptions,
     tasks.packageApp,
     tasks.readEnvironmentFile,
     tasks.createLambdaRole,
@@ -49,6 +50,7 @@ async function main () {
   ], listrOpts)
 
   const updateList = new Listr([
+    tasks.parseOptions,
     tasks.packageApp,
     tasks.readEnvironmentFile,
     tasks.updateLambdaEnvironment,
@@ -57,6 +59,11 @@ async function main () {
     tasks.generateSwaggerDefinition,
     tasks.updateApiGateway,
     tasks.deployApi
+  ], listrOpts)
+
+  const environmentList = new Listr([
+    tasks.parseOptions,
+    tasks.getCurrentEnvironment
   ], listrOpts)
 
   if (!awsHasRegion()) {
@@ -72,10 +79,10 @@ async function main () {
   }
 
   if (args.environment && args.show) {
-    const environment = await amazon.getFunctionEnvironment({ functionName: args['<name>'] })
+    const { currentEnvironment } = await environmentList.run({ args })
 
-    for (const key of Object.keys(environment)) {
-      console.log(`${key}=${environment[key]}`)
+    for (const key of Object.keys(currentEnvironment)) {
+      console.log(`${key}=${currentEnvironment[key]}`)
     }
   }
 }
