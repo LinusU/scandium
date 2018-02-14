@@ -21,5 +21,11 @@
     "rm-file": "^1.0.0",
     "shortid": "^2.2.8",
     "write-file-atomically": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^22.2.2"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

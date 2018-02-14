@@ -12,6 +12,7 @@ const neodoc = require('neodoc')
 const amazon = require('./lib/amazon')
 const tasks = require('./lib/tasks')
 const UserError = require('./lib/user-error')
+const parseEnv = require('./lib/parse-env')
 
 const usage = `
 Scandium
@@ -30,10 +31,12 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
+  --env=<KEY=value>            Include an env var (e.g.: \`-env KEY=value\`). Can appear many times.
 `
 
 async function main () {
-  const args = neodoc.run(usage, { laxPlacement: true })
+  const args = neodoc.run(usage, { repeatableOptions: true })
+
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
@@ -59,12 +62,15 @@ async function main () {
     throw new UserError(awsHasRegion.errorText)
   }
 
+  const defaultEnv = { NODE_ENV: 'production' }
+  const env = Object.assign({}, defaultEnv, parseEnv(args['--env']))
+
   if (args.create) {
-    await createList.run({ args })
+    await createList.run({ args, env })
   }
 
   if (args.update) {
-    await updateList.run({ args })
+    await updateList.run({ args, env })
   }
 
   if (args.environment && args.show) {
