@@ -23,6 +23,7 @@ usage:
 
 options:
   <name>                       Name of the Lambda function.
+  --env-from-file=<path>       Read and set environmental variables from the specified file.
   --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
   --help                       Show this help, then exit.
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
@@ -38,6 +39,7 @@ async function main () {
 
   const createList = new Listr([
     tasks.packageApp,
+    tasks.readEnvironmentFile,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
