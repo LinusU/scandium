@@ -26,6 +26,7 @@ options:
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
+  --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
   --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
