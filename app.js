@@ -52,6 +52,7 @@ async function main () {
   const updateList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
+    tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
     tasks.loadSwaggerDefinition,
