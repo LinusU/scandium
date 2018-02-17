@@ -32,6 +32,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
+  --require-confirmation       Require confirmation before doing changes to infrastructure.
 `
 
 function patchEnvFromFileArg (args) {
@@ -52,6 +53,7 @@ async function main () {
 
   const createList = new Listr([
     tasks.parseOptions,
+    tasks.requireConfirmation,
     tasks.packageApp,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
@@ -63,6 +65,7 @@ async function main () {
 
   const updateList = new Listr([
     tasks.parseOptions,
+    tasks.requireConfirmation,
     tasks.packageApp,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
