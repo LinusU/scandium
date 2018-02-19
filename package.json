@@ -17,7 +17,7 @@
     "listr-verbose-renderer": "^0.4.1",
     "load-json-file": "^2.0.0",
     "load-yaml-file": "^0.1.0",
-    "neodoc": "^1.4.0",
+    "neodoc": "^2.0.0",
     "parse-key-value-pair": "^1.0.0",
     "path-exists": "^3.0.0",
     "pretty-bytes": "^4.0.2",

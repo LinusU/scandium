@@ -34,19 +34,7 @@ options:
   --version                    Print the current version of Scandium, then exit.
 `
 
-function patchEnvFromFileArg (args) {
-  const envFromFileIndex = args.indexOf('--env-from-file', 2)
-
-  if (envFromFileIndex > 0 && envFromFileIndex < args.length - 1) {
-    args.splice(envFromFileIndex, 1)
-    args[envFromFileIndex] = '--env-from-file=' + args[envFromFileIndex]
-  }
-}
-
 async function main () {
-  // FIXME: https://github.com/felixSchl/neodoc/issues/94
-  patchEnvFromFileArg(process.argv)
-
   const args = neodoc.run(usage, { laxPlacement: true })
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
 
