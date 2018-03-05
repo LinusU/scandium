@@ -33,7 +33,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
-  --output=<path>              Output built zip. Example: "--output ./scandium.zip"
+  --output=<path>              Output built zip. Example: "--output scandium.zip"
 `
 
 async function main () {
@@ -89,7 +89,7 @@ async function main () {
   }
 
   if (args.build) {
-    args['--output'] = args['--output'] || './scandium-app.zip'
+    args['--output'] = args['--output'] || 'scandium-app.zip'
     await buildList.run({ args })
   }
 
