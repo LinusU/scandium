@@ -18,6 +18,7 @@ Scandium
 usage:
   scandium create [options]
   scandium update [options]
+  scandium build [options]
   scandium environment show [options]
 
 options:
@@ -32,6 +33,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
+  --output=<path>              Output built zip. Example: "--output scandium.zip"
 `
 
 async function main () {
@@ -41,6 +43,7 @@ async function main () {
   const createList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
+    tasks.saveApp,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
@@ -52,6 +55,7 @@ async function main () {
   const updateList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
+    tasks.saveApp,
     tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
@@ -59,6 +63,12 @@ async function main () {
     tasks.generateSwaggerDefinition,
     tasks.updateApiGateway,
     tasks.deployApi
+  ], listrOpts)
+
+  const buildList = new Listr([
+    tasks.parseOptions,
+    tasks.packageApp,
+    tasks.saveApp
   ], listrOpts)
 
   const environmentList = new Listr([
@@ -76,6 +86,11 @@ async function main () {
 
   if (args.update) {
     await updateList.run({ args })
+  }
+
+  if (args.build) {
+    args['--output'] = args['--output'] || 'scandium-app.zip'
+    await buildList.run({ args })
   }
 
   if (args.environment && args.show) {

@@ -9,6 +9,7 @@
     "aws-arn-parser": "^1.0.0",
     "aws-has-region": "^1.0.0",
     "aws-sdk": "^2.97.0",
+    "bytes": "^3.0.0",
     "cp-file": "^4.2.0",
     "dotenv": "^5.0.0",
     "execa": "^0.8.0",
@@ -20,7 +21,6 @@
     "neodoc": "^2.0.0",
     "parse-key-value-pair": "^1.0.0",
     "path-exists": "^3.0.0",
-    "pretty-bytes": "^4.0.2",
     "rm-file": "^1.0.0",
     "shortid": "^2.2.8",
     "write-file-atomically": "^1.0.0"
