@@ -23,6 +23,7 @@
     "path-exists": "^3.0.0",
     "rm-file": "^1.0.0",
     "shortid": "^2.2.8",
+    "unload": "^1.3.6",
     "write-file-atomically": "^1.0.0"
   }
 }
