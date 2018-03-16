@@ -22,7 +22,7 @@ usage:
   scandium environment show [options]
 
 options:
-  --deploy-to=<stage>          Deploy the API to the specified stage, and make it callable from the Internet.
+  --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "default".
   --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.

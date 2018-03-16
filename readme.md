@@ -15,17 +15,17 @@ npm install --global scandium
 To create a new Lambda function, use the `scandium create` command. This will package your application and upload it to AWS Lambda, as well as configure an API Gateway in front of your function.
 
 ```sh
-scandium create --name=my-awesome-api --deploy-to=prod
+scandium create --name=my-awesome-api
 ```
 
 You should now be presented with a url where you can access your api.
 
-> Now serving live requests at: https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/prod
+> Now serving live requests at: https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/default
 
 Whenever you make changes to your app, you can upload a new version of it by using the `scandium update` command. This will package your application again, and upload it as a new version to the specified Lambda function. It will also update the configuration of the API Gateway to point at the new function.
 
 ```sh
-scandium update --name=my-awesome-api --deploy-to=prod
+scandium update --name=my-awesome-api
 ```
 
 ## Tutorials
