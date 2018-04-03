@@ -2,7 +2,7 @@ FROM amazonlinux:2017.03
 
 # Install prerequisites
 RUN yum install -y gcc gcc-c++ git make openssl-devel zip
-RUN curl https://nodejs.org/download/release/v6.10.3/node-v6.10.3-linux-x64.tar.gz | tar xz -C /usr --strip-components=1
+RUN curl https://nodejs.org/download/release/v8.10.0/node-v8.10.0-linux-x64.tar.gz | tar xz -C /usr --strip-components=1
 
 WORKDIR /var/task
 
