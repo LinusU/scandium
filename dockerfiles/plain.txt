@@ -3,15 +3,19 @@ FROM amazonlinux:2017.03
 # Install prerequisites
 RUN yum install -y gcc gcc-c++ git make openssl-devel zip
 RUN curl https://nodejs.org/download/release/v8.10.0/node-v8.10.0-linux-x64.tar.gz | tar xz -C /usr --strip-components=1
+RUN npm install --global yarn pkg-man-cli
+
 
 WORKDIR /var/task
 
 # Copy stripped package files
+COPY yarn.lock yarn.lock
 COPY scandium-clean-package.json package.json
 COPY scandium-clean-package-lock.json package-lock.json
 
 # Add production dependencies
-RUN npm install --production
+RUN $(pkg-man) install --production
+
 RUN zip -9qyr /output.zip node_modules
 
 # Add the app files
