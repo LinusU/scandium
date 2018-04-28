@@ -22,6 +22,7 @@
     "load-json-file": "^2.0.0",
     "load-yaml-file": "^0.1.0",
     "neodoc": "^2.0.0",
+    "p-retry": "^2.0.0",
     "parse-key-value-pair": "^1.0.0",
     "path-exists": "^3.0.0",
     "rm-file": "^1.2.0",
