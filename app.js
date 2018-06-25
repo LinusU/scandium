@@ -45,6 +45,7 @@ async function main () {
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
+    tasks.uploadToS3,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
