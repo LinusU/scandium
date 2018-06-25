@@ -38,7 +38,8 @@ options:
 
 async function main () {
   const args = neodoc.run(usage, { laxPlacement: true })
-  const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
+  const isVerbose = isCI || args['--verbose']
+  const listrOpts = isVerbose ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
     tasks.parseOptions,
@@ -81,20 +82,20 @@ async function main () {
   }
 
   if (args.create) {
-    await createList.run({ args })
+    await createList.run({ args, isVerbose })
   }
 
   if (args.update) {
-    await updateList.run({ args })
+    await updateList.run({ args, isVerbose })
   }
 
   if (args.build) {
     args['--output'] = args['--output'] || 'scandium-app.zip'
-    await buildList.run({ args })
+    await buildList.run({ args, isVerbose })
   }
 
   if (args.environment && args.show) {
-    const { currentEnvironment } = await environmentList.run({ args })
+    const { currentEnvironment } = await environmentList.run({ args, isVerbose })
 
     for (const key of Object.keys(currentEnvironment)) {
       console.log(`${key}=${currentEnvironment[key]}`)
