@@ -34,6 +34,7 @@ options:
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
   --output=<path>              Output built zip. Example: "--output scandium.zip"
+  --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
 `
 
 async function main () {
@@ -56,6 +57,7 @@ async function main () {
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
+    tasks.uploadToS3,
     tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
