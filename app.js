@@ -40,25 +40,26 @@ options:
 async function main () {
   const args = neodoc.run(usage, { laxPlacement: true })
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
+  const usingS3 = Boolean(args['--bucket'])
 
   const createList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
-    tasks.uploadToS3,
+    usingS3 && tasks.uploadToS3,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
     tasks.generateSwaggerDefinition,
     tasks.createApiGateway,
     tasks.deployApi
-  ], listrOpts)
+  ].filter(Boolean), listrOpts)
 
   const updateList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
-    tasks.uploadToS3,
+    usingS3 && tasks.uploadToS3,
     tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
@@ -66,7 +67,7 @@ async function main () {
     tasks.generateSwaggerDefinition,
     tasks.updateApiGateway,
     tasks.deployApi
-  ], listrOpts)
+  ].filter(Boolean), listrOpts)
 
   const buildList = new Listr([
     tasks.parseOptions,
