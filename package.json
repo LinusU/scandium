@@ -1,6 +1,6 @@
 {
   "name": "scandium",
-  "version": "1.0.0-alpha.34",
+  "version": "1.0.0-alpha.36",
   "license": "MIT",
   "repository": "LinusU/scandium",
   "bin": "app.js",
@@ -26,6 +26,7 @@
     "p-retry": "^2.0.0",
     "parse-key-value-pair": "^1.1.1",
     "path-exists": "^3.0.0",
+    "rev-hash": "^2.0.0",
     "rm-file": "^1.2.0",
     "shortid": "^2.2.8",
     "unload": "^1.3.6",
