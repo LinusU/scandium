@@ -46,20 +46,20 @@ async function main () {
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
-    usingS3 && tasks.uploadToS3,
+    tasks.uploadToS3,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
     tasks.loadSwaggerDefinition,
     tasks.generateSwaggerDefinition,
     tasks.createApiGateway,
     tasks.deployApi
-  ].filter(Boolean), listrOpts)
+  ], listrOpts)
 
   const updateList = new Listr([
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
-    usingS3 && tasks.uploadToS3,
+    tasks.uploadToS3,
     tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
@@ -67,7 +67,7 @@ async function main () {
     tasks.generateSwaggerDefinition,
     tasks.updateApiGateway,
     tasks.deployApi
-  ].filter(Boolean), listrOpts)
+  ], listrOpts)
 
   const buildList = new Listr([
     tasks.parseOptions,
