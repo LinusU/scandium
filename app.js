@@ -40,7 +40,6 @@ options:
 async function main () {
   const args = neodoc.run(usage, { laxPlacement: true })
   const listrOpts = (isCI || args['--verbose']) ? { renderer: listrVerboseRenderer } : {}
-  const usingS3 = Boolean(args['--bucket'])
 
   const createList = new Listr([
     tasks.parseOptions,
