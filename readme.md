@@ -39,3 +39,7 @@ By default, Scandium will set up an API Gateway that simply forwards all request
 ## `prepare`-scripts
 
 Scandium has support for `prepare` scripts, if the script is present in the `package.json` it will make sure that the script is being run with full `devDependencies` installed. The final package being uploaded to Lambda will still only contain the production `dependencies`.
+
+## Ignore files
+
+If there is a `.dockerignore` file present, that one will be used when building the app. Otherwise, if a `.gitignore` file is present, that one will be used. If none of these files exists, a built in list that just contains `.git` and `node_modules` will be used.
