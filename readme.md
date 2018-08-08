@@ -43,3 +43,19 @@ Scandium has support for `prepare` scripts, if the script is present in the `pac
 ## Ignore files
 
 If there is a `.dockerignore` file present, that one will be used when building the app. Otherwise, if a `.gitignore` file is present, that one will be used. If none of these files exists, a built in list that just contains `.git` and `node_modules` will be used.
+
+## Deploy Hooks
+
+If you want to run any specific script inside the Lambda once during each deploy (e.g. for running database migrations), you can use the `--hooks` flag. Pass it the name of a file exporting functions for each hook you want to run.
+
+Currently there is only one hook, named `deploy`, that will run after your Lambda is created, and before the API Gateway is updated to the new Lambda.
+
+Example file:
+
+```js
+const runDatabaseMigrations = require('...')
+
+exports.deploy = async function () {
+  await runDatabaseMigrations()
+}
+```
