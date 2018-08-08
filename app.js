@@ -26,6 +26,7 @@ options:
   --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
+  --hooks=<hooks>              Path to a file with hooks to run on the Lambda in conjunction with the deploy.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
   --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
@@ -50,6 +51,7 @@ async function main () {
     tasks.uploadToS3,
     tasks.createLambdaRole,
     tasks.createLambdaFunction,
+    tasks.invokeHooks,
     tasks.loadSwaggerDefinition,
     tasks.generateSwaggerDefinition,
     tasks.createApiGateway,
@@ -65,6 +67,7 @@ async function main () {
     tasks.getCurrentEnvironment,
     tasks.updateLambdaEnvironment,
     tasks.updateLambdaFunction,
+    tasks.invokeHooks,
     tasks.loadSwaggerDefinition,
     tasks.generateSwaggerDefinition,
     tasks.updateApiGateway,

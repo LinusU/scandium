@@ -156,6 +156,15 @@ exports.handler = function (event, context, cb) {
   // function anyways.
   context.callbackWaitsForEmptyEventLoop = false
 
+  if (event.scandiumInvokeHook) {
+    Promise.resolve()
+      .then(() => require('./' + event.scandiumInvokeHook.file))
+      .then((hooks) => hooks[event.scandiumInvokeHook.hook]())
+      .then(() => cb(null), (err) => cb(err))
+
+    return
+  }
+
   const socket = new LambdaSocket(event)
   const request = new LambdaRequest(socket, event)
   const response = new LambdaResponse(socket, request, cb)
