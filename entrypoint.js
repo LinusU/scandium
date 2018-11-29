@@ -173,4 +173,4 @@ exports.handler = function (event, context, cb) {
 }
 
 // Start the actual app
-require('./index')
+require('./')
