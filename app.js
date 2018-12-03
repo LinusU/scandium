@@ -36,6 +36,8 @@ options:
   --version                    Print the current version of Scandium, then exit.
   --output=<path>              Output built zip. Example: "--output scandium.zip"
   --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
+  --handler=<name>             Use custom handler instead of scandium http handler
+  --worker                     Deploy lambda function as worker (no http)
 `
 
 async function main () {
