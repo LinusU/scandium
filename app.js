@@ -36,6 +36,7 @@ options:
   --version                    Print the current version of Scandium, then exit.
   --output=<path>              Output built zip. Example: "--output scandium.zip"
   --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
+  --ssh-key=<path>             Use the specified SSH key when installing dependencies.
 `
 
 async function main () {
