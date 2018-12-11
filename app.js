@@ -24,6 +24,7 @@ usage:
 options:
   --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "default".
   --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
+  --entrypoint=<handler>       Use custom entrypoint handler instead of the Scandium built-in HTTP handler.
   --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
