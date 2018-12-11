@@ -23,20 +23,20 @@ usage:
 
 options:
   --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "default".
+  --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
   --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
   --hooks=<hooks>              Path to a file with hooks to run on the Lambda in conjunction with the deploy.
-  --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
   --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
+  --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
+  --output=<path>              Output built zip. Example: "--output scandium.zip"
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
   --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
+  --ssh-key=<path>             Use the specified SSH key when installing dependencies.
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
-  --output=<path>              Output built zip. Example: "--output scandium.zip"
-  --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
-  --ssh-key=<path>             Use the specified SSH key when installing dependencies.
 `
 
 async function main () {
