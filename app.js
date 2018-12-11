@@ -30,6 +30,7 @@ options:
   --hooks=<hooks>              Path to a file with hooks to run on the Lambda in conjunction with the deploy.
   --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
+  --no-api-gateway             Skip updating/creating the API Gateway service.
   --output=<path>              Output built zip. Example: "--output scandium.zip"
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
   --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
