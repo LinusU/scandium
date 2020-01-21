@@ -4,6 +4,51 @@
 
 Scandium can deploy your Express, Koa or similar app to lambda, without any modifications to your code. Combined with AWS API Gateway you can have your current API running serverless in no time 😎
 
+## Prerequisites
+
+Scandium requires [Node.js](https://nodejs.org/), [Docker](https://docs.docker.com/get-docker/), and a working [AWS config w/ credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-where). If you are unfamiliar with the AWS config an easy way to get started is to [install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and run `aws configure`.
+
+<table>
+<tr>
+<td>
+
+**macOS** w/ [Brew](https://brew.sh):
+
+```sh
+brew install node
+brew cask install docker
+brew install awscli
+aws configure
+```
+
+</td>
+<td>
+
+**Linux** w/ [Snap](https://snapcraft.io):
+
+```sh
+sudo snap install node --classic
+sudo snap install docker
+sudo snap install aws-cli --classic
+aws configure
+```
+
+</td>
+<td>
+
+**Windows** w/ [Chocolatey](https://chocolatey.org):
+
+```sh
+choco install nodejs
+choco install docker-desktop
+choco install awscli
+aws configure
+```
+
+</td>
+</tr>
+</table>
+
 ## Installation
 
 ```sh
