@@ -48,6 +48,7 @@ async function main () {
 
   const createList = new Listr([
     tasks.parseOptions,
+    tasks.detectRuntime,
     tasks.packageApp,
     tasks.saveApp,
     tasks.verifyCodeSize,
@@ -63,6 +64,7 @@ async function main () {
 
   const updateList = new Listr([
     tasks.parseOptions,
+    tasks.detectRuntime,
     tasks.packageApp,
     tasks.saveApp,
     tasks.verifyCodeSize,
