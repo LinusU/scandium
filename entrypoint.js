@@ -126,12 +126,16 @@ class LambdaResponse extends http.ServerResponse {
 
     const base64Encode = shouldBase64Encode(this._headers)
 
-    this[kCallback](null, {
+    const result = {
       isBase64Encoded: base64Encode,
       statusCode: this.statusCode,
       headers: this._headers,
       body: Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
-    })
+    }
+
+    this.emit('finish')
+
+    this[kCallback](null, result)
   }
 }
 
