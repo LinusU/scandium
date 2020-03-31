@@ -25,6 +25,19 @@ function shouldBase64Encode (headers) {
   return true
 }
 
+function extractMultipleHeaderValues (headers) {
+  const result = Object.create(null)
+
+  for (const key in headers) {
+    if (headers[key] instanceof Array) {
+      result[key] = headers[key]
+      delete headers[key]
+    }
+  }
+
+  return result
+}
+
 class LambdaSocket extends stream.Duplex {
   constructor (event) {
     super()
@@ -126,11 +139,13 @@ class LambdaResponse extends http.ServerResponse {
 
     const headers = this.getHeaders()
     const base64Encode = shouldBase64Encode(headers)
+    const multiValueHeaders = extractMultipleHeaderValues(headers)
 
     const result = {
       isBase64Encoded: base64Encode,
       statusCode: this.statusCode,
       headers,
+      multiValueHeaders,
       body: Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
     }
 
