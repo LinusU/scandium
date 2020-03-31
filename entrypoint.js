@@ -124,12 +124,13 @@ class LambdaResponse extends http.ServerResponse {
   end (chunk) {
     if (chunk) this.write(chunk)
 
-    const base64Encode = shouldBase64Encode(this._headers)
+    const headers = this.getHeaders()
+    const base64Encode = shouldBase64Encode(headers)
 
     const result = {
       isBase64Encoded: base64Encode,
       statusCode: this.statusCode,
-      headers: this._headers,
+      headers,
       body: Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
     }
 
