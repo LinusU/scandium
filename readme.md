@@ -36,12 +36,12 @@ aws configure
 </td>
 <td>
 
-**Windows** w/ [Chocolatey](https://chocolatey.org):
+**Windows** w/ [winget](https://github.com/microsoft/winget-cli):
 
 ```sh
-choco install nodejs
-choco install docker-desktop
-choco install awscli
+winget install OpenJS.NodeJS
+winget install Docker.DockerDesktop
+winget install Amazon.AWSCLI
 aws configure
 ```
 
