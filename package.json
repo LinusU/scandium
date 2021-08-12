@@ -10,10 +10,14 @@
     "test": "standard"
   },
   "dependencies": {
+    "@aws-sdk/client-api-gateway": "^3.25.0",
+    "@aws-sdk/client-apigatewayv2": "^3.25.0",
+    "@aws-sdk/client-iam": "^3.25.0",
+    "@aws-sdk/client-lambda": "^3.25.0",
+    "@aws-sdk/client-s3": "^3.25.0",
     "amend-object": "^1.0.0",
     "aws-arn-parser": "^1.0.0",
-    "aws-has-region": "^1.0.0",
-    "aws-sdk": "^2.287.0",
+    "aws-has-region": "^2.0.1",
     "bytes": "^3.0.0",
     "cp-file": "^6.0.0",
     "dotenv": "^10.0.0",

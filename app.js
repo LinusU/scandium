@@ -3,7 +3,6 @@
 /* Make sure that AWS uses local config files, since this is a CLI util */
 process.env.AWS_SDK_LOAD_CONFIG = 'true'
 
-const awsHasRegion = require('aws-has-region')
 const isCI = require('is-ci')
 const Listr = require('listr')
 const listrVerboseRenderer = require('listr-verbose-renderer')
@@ -22,7 +21,7 @@ usage:
   scandium environment show [options]
 
 options:
-  --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "default".
+  --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "$default".
   --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
   --dry-run                    Build and package the app, but skip uploading and deploying.
   --entrypoint=<handler>       Use custom entrypoint handler instead of the Scandium built-in HTTP handler.
@@ -30,6 +29,7 @@ options:
   --env-from-file=<path>       Read and set environmental variables from the specified file.
   --help                       Show this help, then exit.
   --hooks=<hooks>              Path to a file with hooks to run on the Lambda in conjunction with the deploy.
+  --http-api-id=<http-api-id>  ID of the AWS API Gateway http api to point to the Lambda function.
   --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
   --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
   --no-api-gateway             Skip updating/creating the API Gateway service.
@@ -89,7 +89,9 @@ async function main () {
     tasks.getCurrentEnvironment
   ], listrOpts)
 
-  if (!awsHasRegion()) {
+  const awsHasRegion = await import('aws-has-region')
+
+  if (!(await awsHasRegion.default())) {
     throw new UserError(awsHasRegion.errorText)
   }
 
