@@ -36,6 +36,7 @@ options:
   --output=<path>              Output built zip. Example: "--output scandium.zip"
   --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
   --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
+  --skip-node-modules          Skip including node_modules in the Lambda function. This is useful if you are already bundling your dependencies.
   --ssh-key=<path>             Use the specified SSH key when installing dependencies.
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
