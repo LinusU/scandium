@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const isCI = require('is-ci')
-const Listr = require('listr')
-const listrVerboseRenderer = require('listr-verbose-renderer')
-const neodoc = require('neodoc')
+import isCI from 'is-ci'
+import Listr from 'listr'
+import listrVerboseRenderer from 'listr-verbose-renderer'
+import neodoc from 'neodoc'
 
-const tasks = require('./lib/tasks')
-const UserError = require('./lib/user-error')
+import * as tasks from './lib/tasks.js'
+import UserError from './lib/user-error.js'
 
 const usage = `
 Scandium
