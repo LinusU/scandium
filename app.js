@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 
-/* Make sure that AWS uses local config files, since this is a CLI util */
-process.env.AWS_SDK_LOAD_CONFIG = 'true'
+import isCI from 'is-ci'
+import Listr from 'listr'
+import listrVerboseRenderer from 'listr-verbose-renderer'
+import neodoc from 'neodoc'
 
-const isCI = require('is-ci')
-const Listr = require('listr')
-const listrVerboseRenderer = require('listr-verbose-renderer')
-const neodoc = require('neodoc')
-
-const tasks = require('./lib/tasks')
-const UserError = require('./lib/user-error')
+import * as tasks from './lib/tasks.js'
+import UserError from './lib/user-error.js'
 
 const usage = `
 Scandium

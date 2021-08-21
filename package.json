@@ -3,8 +3,9 @@
   "version": "1.0.0-alpha.56",
   "license": "MIT",
   "repository": "LinusU/scandium",
+  "type": "module",
   "bin": {
-    "scandium": "app.js"
+    "scandium": "./app.js"
   },
   "scripts": {
     "test": "standard"
@@ -15,32 +16,35 @@
     "@aws-sdk/client-iam": "^3.25.0",
     "@aws-sdk/client-lambda": "^3.25.0",
     "@aws-sdk/client-s3": "^3.25.0",
-    "amend-object": "^1.0.0",
+    "amend-object": "^2.0.0",
     "aws-arn-parser": "^1.0.0",
     "aws-has-region": "^2.0.1",
     "bytes": "^3.0.0",
-    "cp-file": "^6.0.0",
+    "cp-file": "^9.1.0",
     "dotenv": "^10.0.0",
-    "execa": "^0.10.0",
-    "format-duration": "^1.1.0",
-    "gitignore-to-dockerignore": "^1.0.0",
-    "is-ci": "^1.1.0",
-    "listr": "^0.14.1",
-    "listr-verbose-renderer": "^0.4.1",
-    "load-json-file": "^5.0.0",
-    "load-text-file": "^1.1.0",
-    "load-yaml-file": "^0.1.0",
-    "nanoid": "^3.1.9",
-    "neodoc": "^2.0.0",
-    "p-retry": "^2.0.0",
+    "execa": "^5.1.1",
+    "format-duration": "^1.4.0",
+    "gitignore-to-dockerignore": "^2.0.0",
+    "is-ci": "^3.0.0",
+    "listr": "^0.14.3",
+    "listr-verbose-renderer": "^0.6.0",
+    "load-json-file": "^6.0.0",
+    "load-text-file": "^2.0.0",
+    "load-yaml-file": "^1.0.0",
+    "nanoid": "^3.1.25",
+    "neodoc": "^2.0.2",
+    "p-retry": "^4.6.1",
     "parse-key-value-pair": "^1.1.1",
-    "path-exists": "^3.0.0",
-    "rev-hash": "^2.0.0",
-    "rm-file": "^1.2.0",
+    "path-exists": "^5.0.0",
+    "rev-hash": "^3.0.0",
+    "rm-file": "^2.0.0",
     "unload": "^1.3.6",
     "write-file-atomically": "^2.0.0"
   },
   "devDependencies": {
-    "standard": "^14.3.3"
+    "standard": "^16.0.3"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
   }
 }
