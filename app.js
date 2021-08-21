@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-/* Make sure that AWS uses local config files, since this is a CLI util */
-process.env.AWS_SDK_LOAD_CONFIG = 'true'
-
 const isCI = require('is-ci')
 const Listr = require('listr')
 const listrVerboseRenderer = require('listr-verbose-renderer')
