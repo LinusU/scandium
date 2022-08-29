@@ -20,7 +20,6 @@
     "aws-arn-parser": "^1.0.0",
     "aws-has-region": "^2.0.1",
     "bytes": "^3.0.0",
-    "cp-file": "^9.1.0",
     "dotenv": "^10.0.0",
     "execa": "^5.1.1",
     "format-duration": "^1.4.0",
@@ -43,7 +42,7 @@
     "write-file-atomically": "^2.0.0"
   },
   "devDependencies": {
-    "standard": "^16.0.3"
+    "standard": "^17.0.0"
   },
   "engines": {
     "node": "^16.15.0 || >=18.0.0"

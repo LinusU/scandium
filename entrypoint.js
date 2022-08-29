@@ -1,7 +1,7 @@
-const net = require('net')
-const url = require('url')
-const http = require('http')
-const stream = require('stream')
+import net from 'node:net'
+import url from 'node:url'
+import http from 'node:http'
+import stream from 'node:stream'
 
 const kChunks = Symbol('chunks')
 const kCallback = Symbol('callback')
@@ -169,7 +169,7 @@ const serverPromise = new Promise((resolve) => {
   }
 })
 
-exports.handler = function (event, context, cb) {
+export function handler (event, context, cb) {
   // Lambda will try and wait for the event loop to exhaust. In a web server
   // that typically won't happen because of connection pools to the database,
   // open connections to external services, etc. Tell Lambda to complete the
@@ -178,7 +178,7 @@ exports.handler = function (event, context, cb) {
 
   if (event.scandiumInvokeHook) {
     Promise.resolve()
-      .then(() => require('./' + event.scandiumInvokeHook.file))
+      .then(() => import('./' + event.scandiumInvokeHook.file))
       .then((hooks) => hooks[event.scandiumInvokeHook.hook]())
       .then(() => cb(null), (err) => cb(err))
 
@@ -193,4 +193,4 @@ exports.handler = function (event, context, cb) {
 }
 
 // Start the actual app
-require('./')
+await import('{{MAIN_FILE}}')
