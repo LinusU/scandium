@@ -31,7 +31,7 @@
     "load-json-file": "^7.0.1",
     "load-text-file": "^2.0.0",
     "load-yaml-file": "^1.0.0",
-    "nanoid": "^3.1.25",
+    "nanoid": "^4.0.0",
     "neodoc": "^2.0.2",
     "p-retry": "^5.1.1",
     "parse-key-value-pair": "^2.0.1",
