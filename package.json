@@ -33,7 +33,7 @@
     "load-yaml-file": "^1.0.0",
     "nanoid": "^3.1.25",
     "neodoc": "^2.0.2",
-    "p-retry": "^4.6.1",
+    "p-retry": "^5.1.1",
     "parse-key-value-pair": "^1.1.1",
     "path-exists": "^5.0.0",
     "rev-hash": "^3.0.0",
