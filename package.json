@@ -21,7 +21,7 @@
     "aws-has-region": "^2.0.1",
     "bytes": "^3.0.0",
     "dotenv": "^10.0.0",
-    "execa": "^5.1.1",
+    "execa": "^6.1.0",
     "format-duration": "^1.4.0",
     "fs-temp": "^2.0.0",
     "gitignore-to-dockerignore": "^2.0.0",
