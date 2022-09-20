@@ -20,7 +20,7 @@
     "aws-arn-parser": "^1.0.0",
     "aws-has-region": "^2.0.1",
     "bytes": "^3.0.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.2",
     "execa": "^6.1.0",
     "format-duration": "^2.0.0",
     "fs-temp": "^2.0.0",
