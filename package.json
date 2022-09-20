@@ -28,7 +28,7 @@
     "is-ci": "^3.0.0",
     "listr": "^0.14.3",
     "listr-verbose-renderer": "^0.6.0",
-    "load-json-file": "^6.0.0",
+    "load-json-file": "^7.0.1",
     "load-text-file": "^2.0.0",
     "load-yaml-file": "^1.0.0",
     "nanoid": "^3.1.25",
