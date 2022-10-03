@@ -38,6 +38,7 @@ options:
   --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
   --verbose                    Print verbose output.
   --version                    Print the current version of Scandium, then exit.
+  --vpc-config=<vpc-config>    For network connectivity to Amazon Web Services resources in a VPC, specify a list of security groups and subnets in the VPC. When you connect a function to a VPC, it can only access resources and the internet through that VPC. Example: "SubnetIds=subnet-aabbccdd,subnet-eeffgghh,SecurityGroupIds=sg-iijjkkll" to set, or "SubnetIds=[],SecurityGroupIds=[]" to remove vpc access.
 `
 
 async function main () {
