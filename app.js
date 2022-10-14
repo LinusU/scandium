@@ -47,6 +47,7 @@ async function main () {
   const listrOpts = isVerbose ? { renderer: listrVerboseRenderer } : {}
 
   const createList = new Listr([
+    tasks.validateAwsRegion,
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
@@ -62,6 +63,7 @@ async function main () {
   ], listrOpts)
 
   const updateList = new Listr([
+    tasks.validateAwsRegion,
     tasks.parseOptions,
     tasks.packageApp,
     tasks.saveApp,
@@ -84,15 +86,10 @@ async function main () {
   ], listrOpts)
 
   const environmentList = new Listr([
+    tasks.validateAwsRegion,
     tasks.parseOptions,
     tasks.getCurrentEnvironment
   ], listrOpts)
-
-  const awsHasRegion = await import('aws-has-region')
-
-  if (!(await awsHasRegion.default())) {
-    throw new UserError(awsHasRegion.errorText)
-  }
 
   if (args.create) {
     await createList.run({ args, isVerbose })
