@@ -5,6 +5,7 @@ import stream from 'node:stream'
 
 const kChunks = Symbol('chunks')
 const kCallback = Symbol('callback')
+const kFromLoadBalancer = Symbol('loadBalancer')
 
 function shouldBase64Encode (headers) {
   /* Every other content-encoding than "identity" is higlhy likely to be binary */
@@ -25,6 +26,20 @@ function shouldBase64Encode (headers) {
   return true
 }
 
+function createMultipleHeaderValues (headers) {
+  const result = Object.create(null)
+
+  for (const key in headers) {
+    if (headers[key] instanceof Array) {
+      result[key] = headers[key]
+    } else {
+      result[key] = [headers[key]]
+    }
+  }
+
+  return result
+}
+
 function extractMultipleHeaderValues (headers) {
   const result = Object.create(null)
 
@@ -42,7 +57,9 @@ class LambdaSocket extends stream.Duplex {
   constructor (event) {
     super()
 
-    const sourceIp = event.requestContext.identity.sourceIp
+    this[kFromLoadBalancer] = (event.requestContext.elb != null)
+
+    const sourceIp = event.requestContext.identity?.sourceIp ?? '127.0.0.1'
     const sourceFamily = net.isIPv6(sourceIp) ? 'IPv6' : 'IPv4'
 
     this.bufferSize = 0
@@ -139,14 +156,29 @@ class LambdaResponse extends http.ServerResponse {
 
     const headers = this.getHeaders()
     const base64Encode = shouldBase64Encode(headers)
-    const multiValueHeaders = extractMultipleHeaderValues(headers)
+    const body = Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
 
-    const result = {
-      isBase64Encoded: base64Encode,
-      statusCode: this.statusCode,
-      headers,
-      multiValueHeaders,
-      body: Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
+    let result
+    if (this.socket[kFromLoadBalancer]) {
+      const multiValueHeaders = createMultipleHeaderValues(headers)
+
+      result = {
+        isBase64Encoded: base64Encode,
+        statusCode: this.statusCode,
+        statusDescription: `${this.statusCode} ${this.statusMessage}`,
+        multiValueHeaders,
+        body
+      }
+    } else {
+      const multiValueHeaders = extractMultipleHeaderValues(headers)
+
+      result = {
+        isBase64Encoded: base64Encode,
+        statusCode: this.statusCode,
+        headers,
+        multiValueHeaders,
+        body
+      }
     }
 
     this.emit('finish')
