@@ -19,6 +19,7 @@ usage:
 
 options:
   --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "$default".
+  --arch=<arch>                Instruction set architecture to build for, "arm64" or "x86_64". [default: x86_64]
   --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
   --dry-run                    Build and package the app, but skip uploading and deploying.
   --entrypoint=<handler>       Use custom entrypoint handler instead of the Scandium built-in HTTP handler.
