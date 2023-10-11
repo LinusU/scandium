@@ -98,11 +98,23 @@ class LambdaRequest extends http.IncomingMessage {
   constructor (socket, event) {
     super(socket)
 
-    if (event.headers) {
+    const rawHeaders = []
+
+    if (event.multiValueHeaders) {
+      for (const key of Object.keys(event.multiValueHeaders)) {
+        for (const value of event.multiValueHeaders[key]) {
+          rawHeaders.push(key)
+          rawHeaders.push(value)
+        }
+      }
+    } else if (event.headers) {
       for (const key of Object.keys(event.headers)) {
-        this.headers[key.toLowerCase()] = event.headers[key]
+        rawHeaders.push(key)
+        rawHeaders.push(event.headers[key])
       }
     }
+
+    this._addHeaderLines(rawHeaders, rawHeaders.length)
 
     this.httpVersionMajor = '1'
     this.httpVersionMinor = '1'
