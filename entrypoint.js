@@ -31,9 +31,9 @@ function createMultipleHeaderValues (headers) {
 
   for (const key in headers) {
     if (headers[key] instanceof Array) {
-      result[key] = headers[key]
+      result[key] = headers[key].map(value => String(value))
     } else {
-      result[key] = [headers[key]]
+      result[key] = [String(headers[key])]
     }
   }
 
