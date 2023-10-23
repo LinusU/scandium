@@ -53,6 +53,24 @@ function extractMultipleHeaderValues (headers) {
   return result
 }
 
+function extractQueryParameters (event) {
+  const result = Object.create(null)
+
+  if (event.multiValueQueryStringParameters) {
+    for (const key in event.multiValueQueryStringParameters) {
+      // Application Load Balancer doesn't decode query parameters
+      result[key] = event.multiValueQueryStringParameters[key].map(value => decodeURIComponent(value))
+    }
+  } else if (event.queryStringParameters) {
+    for (const key in event.queryStringParameters) {
+      // API Gateway does decode query parameters
+      result[key] = [event.queryStringParameters[key]]
+    }
+  }
+
+  return result
+}
+
 class LambdaSocket extends stream.Duplex {
   constructor (event) {
     super()
@@ -121,7 +139,7 @@ class LambdaRequest extends http.IncomingMessage {
     this.httpVersion = '1.1'
     this.complete = true
 
-    this.url = url.format({ pathname: event.path, query: event.queryStringParameters })
+    this.url = url.format({ pathname: event.path, query: extractQueryParameters(event) })
     this.method = event.httpMethod
 
     const body = event.body ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8') : ''
