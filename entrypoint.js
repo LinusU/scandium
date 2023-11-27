@@ -139,8 +139,11 @@ class LambdaRequest extends http.IncomingMessage {
     this.httpVersion = '1.1'
     this.complete = true
 
-    this.url = url.format({ pathname: event.path, query: extractQueryParameters(event) })
-    this.method = event.httpMethod
+    this.url = event.rawPath
+      ? event.rawPath + (event.rawQueryString ? '?' + event.rawQueryString : '')
+      : url.format({ pathname: event.path, query: extractQueryParameters(event) })
+
+    this.method = event.httpMethod ?? event.requestContext?.http?.method
 
     const body = event.body ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8') : ''
 
