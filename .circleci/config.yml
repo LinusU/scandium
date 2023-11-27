@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/node:18.12.1
+      - image: cimg/node:20.9.0
     steps:
       - checkout
       - run: npm install
