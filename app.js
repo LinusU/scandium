@@ -18,28 +18,29 @@ usage:
   scandium environment show [options]
 
 options:
-  --api-gateway-stage=<stage>  Deploy the API to the specified API Gateway stage, defaults to "$default".
-  --arch=<arch>                Instruction set architecture to build for, "arm64" or "x86_64". [default: x86_64]
-  --bucket=<name>              Use S3 bucket for deployment, needed for deployments over 50MB.
-  --dry-run                    Build and package the app, but skip uploading and deploying.
-  --entrypoint=<handler>       Use custom entrypoint handler instead of the Scandium built-in HTTP handler.
-  --env=<key=value>...         Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
-  --env-from-file=<path>       Read and set environmental variables from the specified file.
-  --help                       Show this help, then exit.
-  --hooks=<hooks>              Path to a file with hooks to run on the Lambda in conjunction with the deploy.
-  --http-api-id=<http-api-id>  ID of the AWS API Gateway http api to point to the Lambda function.
-  --name-postfix=<postfix>     Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
-  --name=<name>                Name of the Lambda function. Default to the name property in your package.json.
-  --no-api-gateway             Skip updating/creating the API Gateway service.
-  --output=<path>              Output built zip. Example: "--output scandium.zip"
-  --rest-api-id=<rest-api-id>  ID of the AWS API Gateway rest api to point to the Lambda function.
-  --role=<role>                ARN of the IAM role that Lambda assumes when it executes your function.
-  --skip-node-modules          Skip including node_modules in the Lambda function. This is useful if you are already bundling your dependencies.
-  --ssh-key=<path>             Use the specified SSH key when installing dependencies.
-  --swagger=<swagger>          Path to Swagger API definition used to configure AWS API Gateway.
-  --verbose                    Print verbose output.
-  --version                    Print the current version of Scandium, then exit.
-  --vpc-config=<vpc-config>    For network connectivity to Amazon Web Services resources in a VPC, specify a list of security groups and subnets in the VPC. When you connect a function to a VPC, it can only access resources and the internet through that VPC. Example: "SubnetIds=subnet-aabbccdd,subnet-eeffgghh,SecurityGroupIds=sg-iijjkkll" to set, or "SubnetIds=[],SecurityGroupIds=[]" to remove vpc access.
+  --api-gateway-stage=<stage>    Deploy the API to the specified API Gateway stage, defaults to "$default".
+  --arch=<arch>                  Instruction set architecture to build for, "arm64" or "x86_64". [default: x86_64]
+  --bucket=<name>                Use S3 bucket for deployment, needed for deployments over 50MB.
+  --dry-run                      Build and package the app, but skip uploading and deploying.
+  --docker-build-context=<path>  Use the specified directory as the docker build context. Must be a parent of the app directory.
+  --entrypoint=<handler>         Use custom entrypoint handler instead of the Scandium built-in HTTP handler.
+  --env=<key=value>...           Set environmental variables. Example: "--env PGHOST=linus.aivencloud.com".
+  --env-from-file=<path>         Read and set environmental variables from the specified file.
+  --help                         Show this help, then exit.
+  --hooks=<hooks>                Path to a file with hooks to run on the Lambda in conjunction with the deploy.
+  --http-api-id=<http-api-id>    ID of the AWS API Gateway http api to point to the Lambda function.
+  --name-postfix=<postfix>       Add postfix to name. Example: "--name-postfix -test" will add -test to the end of the name.
+  --name=<name>                  Name of the Lambda function. Default to the name property in your package.json.
+  --no-api-gateway               Skip updating/creating the API Gateway service.
+  --output=<path>                Output built zip. Example: "--output scandium.zip"
+  --rest-api-id=<rest-api-id>    ID of the AWS API Gateway rest api to point to the Lambda function.
+  --role=<role>                  ARN of the IAM role that Lambda assumes when it executes your function.
+  --skip-node-modules            Skip including node_modules in the Lambda function. This is useful if you are already bundling your dependencies.
+  --ssh-key=<path>               Use the specified SSH key when installing dependencies.
+  --swagger=<swagger>            Path to Swagger API definition used to configure AWS API Gateway.
+  --verbose                      Print verbose output.
+  --version                      Print the current version of Scandium, then exit.
+  --vpc-config=<vpc-config>      For network connectivity to Amazon Web Services resources in a VPC, specify a list of security groups and subnets in the VPC. When you connect a function to a VPC, it can only access resources and the internet through that VPC. Example: "SubnetIds=subnet-aabbccdd,subnet-eeffgghh,SecurityGroupIds=sg-iijjkkll" to set, or "SubnetIds=[],SecurityGroupIds=[]" to remove vpc access.
 `
 
 async function main () {
