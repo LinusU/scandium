@@ -24,7 +24,7 @@
     "execa": "^8.0.1",
     "format-duration": "^3.0.2",
     "fs-temp": "^2.0.0",
-    "gitignore-to-dockerignore": "^2.0.0",
+    "gitignore-to-dockerignore": "^3.0.0",
     "is-ci": "^3.0.0",
     "listr": "^0.14.3",
     "listr-verbose-renderer": "^0.6.0",
