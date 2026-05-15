@@ -3,9 +3,8 @@ import url from 'node:url'
 import http from 'node:http'
 import stream from 'node:stream'
 
-const kChunks = Symbol('chunks')
-const kCallback = Symbol('callback')
 const kFromLoadBalancer = Symbol('loadBalancer')
+const kResult = Symbol('result')
 
 function shouldBase64Encode (headers) {
   /* Every other content-encoding than "identity" is higlhy likely to be binary */
@@ -160,11 +159,15 @@ class LambdaRequest extends http.IncomingMessage {
 }
 
 class LambdaResponse extends http.ServerResponse {
-  constructor (socket, request, cb) {
+  #chunks = []
+  #resolve
+
+  constructor (socket, request) {
     super(request)
 
-    this[kChunks] = []
-    this[kCallback] = cb
+    this[kResult] = new Promise((resolve) => {
+      this.#resolve = resolve
+    })
 
     this.assignSocket(socket)
 
@@ -181,7 +184,7 @@ class LambdaResponse extends http.ServerResponse {
       throw new TypeError('Invalid non-string/buffer chunk')
     }
 
-    this[kChunks].push(chunk)
+    this.#chunks.push(chunk)
   }
 
   end (chunk) {
@@ -189,7 +192,7 @@ class LambdaResponse extends http.ServerResponse {
 
     const headers = this.getHeaders()
     const base64Encode = shouldBase64Encode(headers)
-    const body = Buffer.concat(this[kChunks]).toString(base64Encode ? 'base64' : 'utf8')
+    const body = Buffer.concat(this.#chunks).toString(base64Encode ? 'base64' : 'utf8')
 
     let result
     if (this.socket[kFromLoadBalancer]) {
@@ -216,7 +219,7 @@ class LambdaResponse extends http.ServerResponse {
 
     this.emit('finish')
 
-    this[kCallback](null, result)
+    this.#resolve(result)
   }
 }
 
@@ -234,7 +237,7 @@ const serverPromise = new Promise((resolve) => {
   }
 })
 
-export function handler (event, context, cb) {
+export async function handler (event, context) {
   // Lambda will try and wait for the event loop to exhaust. In a web server
   // that typically won't happen because of connection pools to the database,
   // open connections to external services, etc. Tell Lambda to complete the
@@ -242,19 +245,19 @@ export function handler (event, context, cb) {
   context.callbackWaitsForEmptyEventLoop = false
 
   if (event.scandiumInvokeHook) {
-    Promise.resolve()
-      .then(() => import('./' + event.scandiumInvokeHook.file))
-      .then((hooks) => hooks[event.scandiumInvokeHook.hook]())
-      .then(() => cb(null), (err) => cb(err))
-
+    const hooks = await import('./' + event.scandiumInvokeHook.file)
+    await hooks[event.scandiumInvokeHook.hook]()
     return
   }
 
   const socket = new LambdaSocket(event)
   const request = new LambdaRequest(socket, event)
-  const response = new LambdaResponse(socket, request, cb)
+  const response = new LambdaResponse(socket, request)
 
-  serverPromise.then((server) => server.emit('request', request, response))
+  const server = await serverPromise
+  server.emit('request', request, response)
+
+  return await response[kResult]
 }
 
 // Start the actual app
