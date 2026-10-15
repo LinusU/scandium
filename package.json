@@ -8,7 +8,7 @@
     "scandium": "./app.js"
   },
   "scripts": {
-    "test": "standard && node lib/*.test.js"
+    "test": "standard && node --test lib/*.test.js"
   },
   "dependencies": {
     "@aws-sdk/client-api-gateway": "^3.375.0",

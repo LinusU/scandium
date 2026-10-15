@@ -4,6 +4,7 @@ import http from 'node:http'
 import stream from 'node:stream'
 
 const kFromLoadBalancer = Symbol('loadBalancer')
+const kPayloadV2 = Symbol('payloadV2')
 const kResult = Symbol('result')
 
 function shouldBase64Encode (headers) {
@@ -75,8 +76,9 @@ class LambdaSocket extends stream.Duplex {
     super()
 
     this[kFromLoadBalancer] = (event.requestContext.elb != null)
+    this[kPayloadV2] = (event.version === '2.0')
 
-    const sourceIp = event.requestContext.identity?.sourceIp ?? '127.0.0.1'
+    const sourceIp = event.requestContext.http?.sourceIp ?? event.requestContext.identity?.sourceIp ?? '127.0.0.1'
     const sourceFamily = net.isIPv6(sourceIp) ? 'IPv6' : 'IPv4'
 
     this.bufferSize = 0
@@ -129,6 +131,10 @@ class LambdaRequest extends http.IncomingMessage {
         rawHeaders.push(key)
         rawHeaders.push(event.headers[key])
       }
+    }
+
+    if (socket[kPayloadV2] && event.cookies?.length) {
+      rawHeaders.push('cookie', event.cookies.join('; '))
     }
 
     this._addHeaderLines(rawHeaders, rawHeaders.length)
@@ -204,6 +210,24 @@ class LambdaResponse extends http.ServerResponse {
         statusDescription: `${this.statusCode} ${this.statusMessage}`,
         multiValueHeaders,
         body
+      }
+    } else if (this.socket[kPayloadV2]) {
+      const cookies = headers['set-cookie']
+      delete headers['set-cookie']
+
+      for (const key in headers) {
+        headers[key] = Array.isArray(headers[key]) ? headers[key].join(',') : String(headers[key])
+      }
+
+      result = {
+        isBase64Encoded: base64Encode,
+        statusCode: this.statusCode,
+        headers,
+        body
+      }
+
+      if (cookies != null) {
+        result.cookies = Array.isArray(cookies) ? cookies.map(String) : [String(cookies)]
       }
     } else {
       const multiValueHeaders = extractMultipleHeaderValues(headers)
