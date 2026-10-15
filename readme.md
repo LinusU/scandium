@@ -87,6 +87,14 @@ The deployed entrypoint has support for being called from an application load ba
 
 There is currently no support in the Scandium CLI to automatically setup an ALB for you.
 
+## Lambda Function URLs
+
+The deployed entrypoint also supports [Lambda Function URLs](https://docs.aws.amazon.com/lambda/latest/dg/urls-invocation.html) using payload format 2.0, including cookies, repeated query parameters, binary request and response bodies, and IPv4/IPv6 source addresses. The same payload format is supported when using API Gateway HTTP APIs.
+
+Configure the Function URL separately; the Scandium CLI does not create or manage it. Use the default `BUFFERED` invoke mode. The entrypoint buffers responses and does not implement Lambda response streaming.
+
+Function URLs have a [6 MB synchronous request/response payload limit](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html), including the JSON envelope and base64 overhead for binary bodies. The source address exposed through `req.socket.remoteAddress` is the immediate caller reported by AWS; behind a proxy such as CloudFront, use your framework's trusted proxy configuration to interpret forwarded headers.
+
 ## `prepare`/`build`-scripts
 
 Scandium has support for `prepare`/`build` scripts, if the script is present in the `package.json` it will make sure that the script is being run with full `devDependencies` installed. The final package being uploaded to Lambda will still only contain the production `dependencies`.
